@@ -158,6 +158,8 @@ if [ -d "${archive}" ] ; then
 	find ${DEPLOY_DIR_IMAGE} -maxdepth 1 -type l -exec cp -L '{}' ${archive}/other/ \;
 	# Copy extra folders if available (e.g. bootloader)
 	find ${DEPLOY_DIR_IMAGE}/* -maxdepth 0 -type d -exec cp -r '{}' ${archive}/other/ \;
+	# Copy the UEFI provisioning firmware
+	cp ${DEPLOY_DIR_IMAGE}/LockDown.efi ${archive}/other/ || true
 	# Copy the ovmf firmware files used by virtual machines
 	cp ${DEPLOY_DIR_IMAGE}/ovmf.* ${archive}/other/ || true
 	cp ${DEPLOY_DIR_IMAGE}/QEMU*.fd ${archive}/other/ || true
@@ -215,6 +217,7 @@ if [ -d "${archive}" ] ; then
 	mv ${archive}/other/lmp-*.aiotflash.tar ${archive}/ || true
 
 	# Move bootloader / boot firmware to the root of the archive
+	mv ${DEPLOY_DIR_IMAGE}/LockDown.efi ${archive}/other/ || true
 	## Intel (used by Qemu)
 	mv ${archive}/other/ovmf.qcow2 ${archive}/ || true
 	mv ${archive}/other/ovmf.secboot.qcow2 ${archive}/ || true
